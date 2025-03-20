@@ -1,0 +1,36 @@
+  version: '3.8'
+
+  services:
+    app:
+      build: .
+      container_name: todoapp
+      ports:
+        - "8080:8080"
+      depends_on:
+        - db
+      env_file: .env
+      volumes:
+        - ./.env:/app/.env
+      networks:
+        - todo-network
+
+    db:
+      image: postgres:latest
+      container_name: postgres_db
+      restart: always
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: 1234
+        POSTGRES_DB: todoapp
+      ports:
+        - "5432:5432"
+      networks:
+        - todo-network
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+  networks:
+    todo-network:
+
+  volumes:
+    postgres_data:
